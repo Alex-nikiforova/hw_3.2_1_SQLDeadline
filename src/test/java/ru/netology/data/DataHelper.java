@@ -34,12 +34,13 @@ public class DataHelper {
     }
 
     public static VerificationCode getValidVerificationCode() throws SQLException {
-        String codeSQL = "SELECT code FROM auth_codes WHERE id = (SELECT max(id) FROM auth_codes)";
+        String codeSQL = "SELECT code FROM auth_codes " +
+                "ORDER BY created DESC limit 1";
         val runner = new QueryRunner();
 
         try (
                 val connection = DriverManager.getConnection(
-                        "jdbc:mysql://192.168.99.100:3306/db", "alex", "E7PgwDjz"
+                        "jdbc:mysql://localhost:3306/db", "alex", "E7PgwDjz"
                 );
         ) {
             String code = runner.query(connection, codeSQL, new ScalarHandler<>());
