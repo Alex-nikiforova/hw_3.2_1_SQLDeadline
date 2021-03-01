@@ -20,6 +20,6 @@
 
 ### Окружение
 
-версия ОС: Windows 10 Pro, 64bit
-Браузер: Google Chrome ver.88.0.4324.190
-версия Java: Open JDK "11.0.9" 2020-10-20
+- версия ОС: Windows 10 Pro, 64bit
+- Браузер: Google Chrome ver.88.0.4324.190
+- версия Java: Open JDK "11.0.9" 2020-10-20
