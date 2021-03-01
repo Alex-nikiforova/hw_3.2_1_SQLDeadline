@@ -33,19 +33,25 @@ public class DataHelper {
         private String code;
     }
 
-    public static VerificationCode getValidVerificationCode() throws SQLException {
+    public static VerificationCode getValidVerificationCode() {
         String codeSQL = "SELECT code FROM auth_codes " +
                 "ORDER BY created DESC limit 1";
+
         val runner = new QueryRunner();
+
+        String code = null;
 
         try (
                 val connection = DriverManager.getConnection(
                         "jdbc:mysql://localhost:3306/db", "alex", "E7PgwDjz"
                 );
         ) {
-            String code = runner.query(connection, codeSQL, new ScalarHandler<>());
-            return new VerificationCode(code);
+            code = runner.query(connection, codeSQL, new ScalarHandler<>());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        return new VerificationCode(code);
     }
 
     public static VerificationCode getInvalidVerificationCode() {

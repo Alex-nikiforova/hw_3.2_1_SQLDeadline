@@ -5,9 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.page.LoginPage;
 
-import java.sql.SQLException;
-
 import static com.codeborne.selenide.Selenide.open;
+import static ru.netology.data.DataHelper.*;
 
 public class LoginTest {
 
@@ -17,36 +16,41 @@ public class LoginTest {
     }
 
     @Test
-    public void shouldSuccessfulLogin() throws SQLException {
+    public void shouldSuccessfulLogin() {
         val loginPage = new LoginPage();
-        val verificationPage = loginPage.validLogin();
-        val dashboardPage = verificationPage.validVerify();
+        loginPage.login(getValidLogin());
+        val verificationPage = loginPage.goToVerificationPage();
+        verificationPage.verify(getValidVerificationCode());
+        val dashboardPage = verificationPage.goToDashboardPage();
         dashboardPage.dashboardPage();
     }
 
     @Test
     public void shouldGetErrorIfInvalidLogin() {
         val loginPage = new LoginPage();
-        loginPage.invalidLogin();
+        loginPage.login(getInvalidLogin());
         loginPage.getErrorIfInvalidUser();
     }
 
     @Test
     public void shouldGetErrorIfAttemptsExceeded() {
         val loginPage = new LoginPage();
-        int i;
-        for (i = 0; i < 3; i++) {
-            loginPage.invalidLogin();
-            loginPage.clearLoginFields();
-        }
+
+        loginPage.login(getInvalidLogin());
+        loginPage.clearLoginFields();
+        loginPage.login(getInvalidLogin());
+        loginPage.clearLoginFields();
+        loginPage.login(getInvalidLogin());
+
         loginPage.getErrorIfAttemptsExceeded();
     }
 
     @Test
     public void shouldGetErrorIfInvalidVerificationCode() {
         val loginPage = new LoginPage();
-        val verificationPage = loginPage.validLogin();
-        verificationPage.invalidVerify();
+        loginPage.login(getValidLogin());
+        val verificationPage = loginPage.goToVerificationPage();
+        verificationPage.verify(getInvalidVerificationCode());
         verificationPage.getErrorIfInvalidVerify();
     }
 }

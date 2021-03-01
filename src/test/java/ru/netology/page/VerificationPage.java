@@ -1,14 +1,11 @@
 package ru.netology.page;
 
 import com.codeborne.selenide.SelenideElement;
-
-import java.sql.SQLException;
+import ru.netology.data.DataHelper;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static ru.netology.data.DataHelper.getInvalidVerificationCode;
-import static ru.netology.data.DataHelper.getValidVerificationCode;
 
 public class VerificationPage {
     private SelenideElement codeField = $("[data-test-id=code] input");
@@ -18,15 +15,13 @@ public class VerificationPage {
         codeField.shouldBe(visible);
     }
 
-    public DashboardPage validVerify() throws SQLException {
-        codeField.setValue(getValidVerificationCode().getCode());
+    public void verify(DataHelper.VerificationCode code) {
+        codeField.setValue(code.getCode());
         verifyButton.click();
-        return new DashboardPage();
     }
 
-    public void invalidVerify() {
-        codeField.setValue(getInvalidVerificationCode().getCode());
-        verifyButton.click();
+    public DashboardPage goToDashboardPage() {
+        return new DashboardPage();
     }
 
     public void getErrorIfInvalidVerify() {
